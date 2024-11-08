@@ -14,13 +14,12 @@ exports.createOrganization = (db, orgData) => {
     return new Promise((resolve, reject) => {
         const sql = `
             INSERT INTO organizacion 
-            (orgcod, orgver, orgfeccrea, orgfecmod, orgnom, orgdir, orgtel, orgrepleg, orgtelrepleg, orgruc, orgcontact, orgtelcon, orgtiporgcod, orgautcod, orgest, orgcom, orgartcod, orgusuid) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            (orgcod, orgver, orgfecmod, orgnom, orgdir, orgtel, orgrepleg, orgtelrepleg, orgruc, orgcontact, orgtelcon, orgtiporgcod, orgautcod, orgest, orgcom, orgartcod, orgusuid) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
         const {
             orgcod,
             orgver,
-            orgfeccrea,
             orgfecmod,
             orgnom,
             orgdir,
@@ -41,7 +40,6 @@ exports.createOrganization = (db, orgData) => {
         db.run(sql, [
             orgcod,
             orgver,
-            orgfeccrea,
             orgfecmod,
             orgnom,
             orgdir,
