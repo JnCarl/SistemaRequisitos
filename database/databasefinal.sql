@@ -26,7 +26,7 @@ FOREIGN KEY(`proartcod`) REFERENCES `artefacto`(`artcod`)
 CREATE TABLE IF NOT EXISTS `organizacion` (
 	`orgcod` TEXT NOT NULL,
 	`orgver` REAL NOT NULL,
-	`orgfeccrea` REAL NOT NULL,
+	`orgfeccrea` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 	`orgfecmod` REAL NOT NULL,
 	`orgnom` REAL NOT NULL,
 	`orgdir` TEXT NOT NULL,
@@ -457,3 +457,5 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
 	`UsuNomUsu` TEXT NOT NULL,
 	`UsuCon` TEXT NOT NULL
 );
+
+-- Triggers for table: reporte

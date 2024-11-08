@@ -4,6 +4,7 @@ const express = require('express');
 const cors = require('cors');
 const db = require('./config/database');
 const usersRouter = require('./routes/userRoutes');
+const organizationRouter = require('./routes/organizationRoutes'); // Importar las rutas de organización
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use((req, res, next) => {
 
 // Configuración de rutas
 app.use('/api', usersRouter);
+app.use('/api/organizations', organizationRouter); // Usar las rutas de organización
 
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
