@@ -75,10 +75,10 @@ exports.deleteOrganization = async(req, res) => {
     }
 };
 //Buscar una organización por nombre, año y mes
-exports.searchOrganization = async(req, res) => {
+exports.searchOrganizations = async(req, res) => {
     try{
-        const {name, year, month} = req.query;
-        const results = await organizationModel.searchOrganization(req.db, name, year, month);
+        const {nombre, year, month} = req.query;
+        const results = await organizationModel.searchOrganizations(req.db, nombre, year, month);
         res.status(200).json(results);
     }catch(err){
         res.status(500).json({error: err.message});

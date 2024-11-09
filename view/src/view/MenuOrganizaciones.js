@@ -4,25 +4,53 @@ import '../styles/stylesMenuOrganizaciones.css';
 
 const MenuOrganizaciones = () => {
     const [mainOrganization, setMainOrganization] = useState(null);
+    const [organizations, setOrganizations] = useState([]); 
     const [error, setError] = useState(null);
+
+    //Estado para los parámetros de búsqueda
+    const [searchNombre, setSearchNombre] = useState();
+    const [searchYear, setSearchYear] = useState();
+    const [searchMonth, setSearchMonth] = useState();
 
     useEffect(() => {
         // Función para obtener la organización principal
         const fetchMainOrganization = async () => {
             try {
-                // Usar axios para hacer la solicitud GET
                 const response = await axios.get('http://localhost:5000/api/organizations/principal');
-                
-                // Establecer los datos de la organización principal en el estado
-                setMainOrganization(response.data);
+                setMainOrganization(response.data);// Establecer los datos de la organización principal en el estado
             } catch (err) {
-                // Manejar el error y actualizar el estado de error
                 setError(err.response ? err.response.data.error : 'Error al obtener la organización principal');
+            }
+        };
+        //Obtener o listar todas las organizaciones
+        const fetchOrganizations = async () => {
+            try{
+                const response = await axios.get('http://localhost:5000/api/organizations');
+                setOrganizations(response.data);// Establecer los datos de las organizaciones en el estado
+            }catch(err){
+                setError(err.response ? err.response.data.error : 'Error al obtener las organizaciones');
             }
         };
 
         fetchMainOrganization();
+        fetchOrganizations();
     }, []);
+
+    //Función para buscar organizaciones
+    const handleSearch = async () => {
+        try{
+            const response = await axios.get('http://localhost:5000/api/organizations/search', {
+                params: {
+                    nombre: searchNombre,
+                    year: searchYear,
+                    month: searchMonth
+                }
+            });
+            setOrganizations(response.data);// actualizar los datos de busqueda 
+        }catch(err){
+            setError(err.response ? err.response.data.error : 'Error al buscar organizaciones');
+        }
+    };
 
     return (
         <div className="menu-container">
@@ -78,18 +106,46 @@ const MenuOrganizaciones = () => {
                             <h3>Organizaciones</h3>
 
                         <div className="sectionTextBuscar">
-                            <input className="textBuscar" type="text" placeholder="Buscar" />
-                            <button className="search-button">Buscar</button>
+                            <input 
+                            className="textBuscar" 
+                            type="text" 
+                            placeholder="Buscar por nombre" 
+                            value={searchNombre}
+                            onChange={(e) => setSearchNombre(e.target.value)}
+                            />
+                            <button className="search-button" onClick={handleSearch}>Buscar</button>
                         </div>
-
 
                         <div className="search-section-bar">
                             <button className="register-button">Registrar Organización</button>
                             <div className="searchbar">
-                                <select className="year-input"><option>AÑO</option></select>
-                                <select className="month-input"><option>MES</option></select>
+                                <select 
+                                className="year-input"
+                                value={searchYear}
+                                onChange={(e) => setSearchYear(e.target.value)}
+                                >
+                                <option value="">AÑO</option>
+                                <option value="2021">2021</option>
+                                <option value ="2022">2022</option>
+                                <option value ="2023">2023</option>
+                                <option value ="2024">2024</option>
+                                {/* <option>2025</option>  mas años*/}
+                                </select>
+                                <select 
+                                className="month-input"
+                                value={searchMonth}
+                                onChange={(e) => setSearchMonth(e.target.value)}
+                                >
+                                <option value="">MES</option>
+                                <option value="01">Enero</option>
+                                <option value="02">Febrero</option>
+                                <option value="03">Marzo</option>
+                                </select>
                             </div>
                         </div>
+                        {error ? (
+                            <p>{error}</p>
+                        ) : (
                         <table>
                             <thead>
                                 <tr>
@@ -101,23 +157,22 @@ const MenuOrganizaciones = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>ORG-0002</td>
-                                    <td>Mocar Company</td>
-                                    <td>23/10/2023</td>
-                                    <td>00.01</td>
-                                    <td></td>
+                                {organizations.map((org) =>(
+                                <tr key={org.orgcod}>
+                                    <td>{org.orgcod}</td>
+                                    <td>{org.orgnom}</td>
+                                    <td>{org.orgfeccrea}</td>
+                                    <td>{org.orgver}</td>
+                                    <td>
+                                        <button>Editar</button>
+                                        <button>Eliminar</button>
+                                    </td>
                                 </tr>
-                                <tr>
-                                    <td>ORG-0003</td>
-                                    <td>PetShop Veterinaria</td>
-                                    <td>10/05/2023</td>
-                                    <td>00.01</td>
-                                    <td></td>
-                                </tr>
+                                ))}
                             </tbody>
                         </table>
-                        <h4>Total de registros 2</h4>
+                        )}
+                        <h4>Total de registros {organizations.length}</h4>
                         <div className="export-buttons">
                             <button className="export-button">Excel</button>
                             <button className="export-button">PDF</button>
