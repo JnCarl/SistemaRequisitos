@@ -458,4 +458,3 @@ CREATE TABLE IF NOT EXISTS `Usuario` (
 	`UsuCon` TEXT NOT NULL
 );
 
--- Triggers for table: reporte

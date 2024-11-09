@@ -1,6 +1,6 @@
 exports.getMainOrganization = (db) =>{
     return new Promise((resolve, reject) => {
-        const sql = 'SELECT * FROM organizacion WHERE ORDER BY orgfeccrea ASC LIMIT 1';
+        const sql = 'SELECT * FROM organizacion ORDER BY orgfeccrea ASC LIMIT 1';
         db.get(sql, [], (err, row) =>{
             if(err){
                 reject(err);
@@ -58,6 +58,16 @@ exports.createOrganization = (db, orgData) => {
         ], function (err) {
             if (err) reject(err);
             else resolve(this.lastID);
+        });
+    });
+};
+//Listar/Obtener todas las organizaciones
+exports.getOrganizations = (db) => {
+    return new Promise((resolve, reject) => {
+        const sql = 'SELECT * FROM organizacion';
+        db.all(sql, [], (err, rows)=>{
+            if(err) reject(err);
+            else resolve(rows);
         });
     });
 };

@@ -22,6 +22,7 @@ app.use((req, res, next) => {
 app.use('/api', usersRouter);
 app.use('/api/organizations', organizationRouter); // Usar las rutas de organización
 
+
 // Iniciar el servidor
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {

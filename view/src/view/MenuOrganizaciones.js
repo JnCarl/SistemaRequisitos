@@ -1,10 +1,28 @@
-import React from "react"
-
-import '../styles/stylesMenuOrganizaciones.css'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import '../styles/stylesMenuOrganizaciones.css';
 
 const MenuOrganizaciones = () => {
+    const [mainOrganization, setMainOrganization] = useState(null);
+    const [error, setError] = useState(null);
 
-    
+    useEffect(() => {
+        // Función para obtener la organización principal
+        const fetchMainOrganization = async () => {
+            try {
+                // Usar axios para hacer la solicitud GET
+                const response = await axios.get('http://localhost:5000/api/organizations/principal');
+                
+                // Establecer los datos de la organización principal en el estado
+                setMainOrganization(response.data);
+            } catch (err) {
+                // Manejar el error y actualizar el estado de error
+                setError(err.response ? err.response.data.error : 'Error al obtener la organización principal');
+            }
+        };
+
+        fetchMainOrganization();
+    }, []);
 
     return (
         <div className="menu-container">
@@ -14,20 +32,14 @@ const MenuOrganizaciones = () => {
             </header>
 
             <div className="menusub-container">
-
                 <aside className="sidebar">
-                    {/*<div className="nav-button">
-                            <button className="atras-button">Atras</button>
-                            <button className="adelante-button">Adelante</button>
-                        </div>*/}
                     <div className="bar-menu">
-                        <p1>MENU PRINCIPAL</p1>
+                        <p>MENU PRINCIPAL</p>
                     </div>
-
-                    <div className="profile-section" >
+                    <div className="profile-section">
                         <div className="profile-icon">👤</div>
-                        <p2>Nombre Autor - Cod</p2>
-                        <button className="logout-button" >Cerrar Sesión</button>
+                        <p>Nombre Autor - Cod</p>
+                        <button className="logout-button">Cerrar Sesión</button>
                     </div>
                 </aside>
 
@@ -35,29 +47,35 @@ const MenuOrganizaciones = () => {
                     <h2>MENÚ PRINCIPAL - EMPRESAS</h2>
                     <section className="organization-section">
                         <h3>Organización Principal</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Código</th>
-                                    <th>Nombre</th>
-                                    <th>Fecha creación</th>
-                                    <th>Versión</th>
-                                    <th>Opciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>ORG-0001</td>
-                                    <td>Empresa de Software ReqWizards</td>
-                                    <td>23/10/2023</td>
-                                    <td>00.01</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        {error ? (
+                            <p>{error}</p>
+                        ) : mainOrganization ? (
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Nombre</th>
+                                        <th>Fecha creación</th>
+                                        <th>Versión</th>
+                                        <th>Opciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{mainOrganization.orgcod}</td>
+                                        <td>{mainOrganization.orgnom}</td>
+                                        <td>{mainOrganization.orgfeccrea}</td>
+                                        <td>{mainOrganization.orgver}</td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        ) : (
+                            <p>Cargando...</p>
+                        )}
                     </section>
-                    <section className="organizations-section">
-                        <h3>Organizaciones</h3>
+                        <section className="organizations-section">
+                            <h3>Organizaciones</h3>
 
                         <div className="sectionTextBuscar">
                             <input className="textBuscar" type="text" placeholder="Buscar" />
@@ -105,10 +123,11 @@ const MenuOrganizaciones = () => {
                             <button className="export-button">PDF</button>
                         </div>
                     </section>
+
                 </main>
             </div>
         </div>
     );
 };
 
-export default MenuOrganizaciones
+export default MenuOrganizaciones;
